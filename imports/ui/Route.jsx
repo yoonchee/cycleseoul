@@ -24,7 +24,7 @@ export default class Route extends Component {
           <dt className='elevation'>Elevation</dt>
           <dd>{this.state.elevation.toFixed(0)}m</dd>
         </dl>
-        <div className='description'>{this.state.description}</div>
+        <div className='description'>{this.props.route.description}</div>
         <div id={this.props.route._id} className='map'></div>
       </li>
     );

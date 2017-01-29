@@ -2,10 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import { Tasks } from '../api/tasks.js';
 import { Routes } from '../api/routes.js';
 
-import Task from './Task.jsx';
 import Route from './Route.jsx';
 
 // App component - represents the whole app
@@ -13,58 +11,26 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      hideCompleted: false,
-    };
+    this.state = {};
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
-    // Find the text field via the React ref
-    const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
-
-    Tasks.insert({
-      text,
-      createdAt: new Date(), // current time
-    });
-
-    // Clear form
-    ReactDOM.findDOMNode(this.refs.textInput).value = '';
-  }
-
-  handleSubmit2(event) {
-    event.preventDefault();
-
     const file = ReactDOM.findDOMNode(this.refs.fileInput).files[0];
     if (!file) return;
 
+    const description = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
     const reader = new FileReader();
 
     reader.onload = function(event) {
       Routes.insert({
-        name: "Test Route",
         gpx: reader.result,
+        description: description,
       });
       console.log("Succesfully inserted a route.");
     }
     reader.readAsText(file);
-  }
-
-  toggleHideCompleted() {
-    this.setState({
-      hideCompleted: !this.state.hideCompleted,
-    });
-  }
-
-  renderTasks() {
-    let filteredTasks = this.props.tasks;
-    if (this.state.hideCompleted) {
-      filteredTasks = filteredTasks.filter(task => !task.checked);
-    }
-    return filteredTasks.map((task) => (
-      <Task key={task._id} task={task} />
-    ));
   }
 
   renderRoutes() {
@@ -80,11 +46,17 @@ class App extends Component {
           <h1>Cycling in Seoul</h1>
 
           <form encType="multipart/form-data" method="post" className="new-route"
-                onSubmit={this.handleSubmit2.bind(this)} >
+                onSubmit={this.handleSubmit.bind(this)} >
             <input
               type="file"
               ref="fileInput"
               placeholder="Add GPX file"
+            />
+            <textarea
+              ref="textInput"
+              rows="4"
+              cols="70"
+              placeholder="Add description"
             />
             <input type="submit" />
           </form>
@@ -99,15 +71,13 @@ class App extends Component {
 }
 
 App.propTypes = {
-  tasks: PropTypes.array.isRequired,
   routes: PropTypes.array.isRequired,
-  incompleteCount: PropTypes.number.isRequired,
+  routesCount: PropTypes.number.isRequired,
 };
 
 export default createContainer(() => {
   return {
-    tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
-    routes: Routes.find({}).fetch(),
-    incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
+    routes: Routes.find().fetch(),
+    routesCount: Routes.find().count(),
   };
 }, App);
