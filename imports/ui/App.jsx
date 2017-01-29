@@ -62,7 +62,8 @@ class App extends Component {
           </form>
         </header>
 
-        <ul>
+        <h2>Top {this.props.routesCount} Cycling Routes in Seoul</h2>
+        <ul className="routes">
           {this.renderRoutes()}
         </ul>
       </div>

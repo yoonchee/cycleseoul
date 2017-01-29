@@ -4,26 +4,34 @@ import { Routes } from '../api/routes.js';
 
 // Task component - represents a single todo item
 export default class Route extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      length: 0,
-      elevation: 0,
-      description: '',
-    };
+  toggleChecked() {
+    console.log('checkbox clicked for route ' + this.state.name);
+    /*
+    const likers = Routes.find(this.props.route._id).likers;
+    Routes.update(this.props.route._id, {
+      $set: { liked: !this.props.route.liked },
+    });
+    */
   }
 
   render() {
     return (
       <li className='route'>
-        <h2>{this.state.name}</h2>
+        <h3>{this.props.route.name}</h3>
+
         <dl className='stats'>
           <dt className='length'>Length</dt>
-          <dd>{(this.state.length / 1000).toFixed(0)}km</dd>
+          <dd>{this.props.route.length}km</dd>
           <dt className='elevation'>Elevation</dt>
-          <dd>{this.state.elevation.toFixed(0)}m</dd>
+          <dd>{this.props.route.elevation}m</dd>
         </dl>
+
+        <input
+          type="checkbox"
+          readOnly
+          onClick={this.toggleChecked.bind(this)}
+        />
+
         <div className='description'>{this.props.route.description}</div>
         <div id={this.props.route._id} className='map'></div>
       </li>
@@ -41,15 +49,8 @@ export default class Route extends Component {
       {detectRetina: true}
     ).addTo(map);
 
-    const that = this;
     new L.GPX(this.props.route.gpx, {async: true}).on('loaded', function(e) {
-      const gpx = e.target;
-      that.setState({
-        name: gpx.get_name(),
-        length: gpx.get_distance(),
-        elevation: gpx.get_elevation_gain(),
-      });
-      map.fitBounds(gpx.getBounds());
+      map.fitBounds(e.target.getBounds());
     }).addTo(map);
   }
 }
