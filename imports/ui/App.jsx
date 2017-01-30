@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
+import { Grid, Row, Col, ListGroup, Jumbotron } from 'react-bootstrap';
 
 import { Routes } from '../api/routes.js';
 
@@ -41,32 +42,46 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
-        <header>
-          <h1>Cycling in Seoul</h1>
+      <Grid>
+        <Row>
+          <Col md={12}>
+            <header>
+              <Jumbotron>
+                <h1>Cycling in Seoul</h1>
+                <p>
+                  Cycle along the beautiful Han River on paved bicycle roads.
+                  Or venture out to the outskirts of the Seoul for mountains,
+                  streams, and endless bike paths. Whether you're a Strava
+                  PR-setting roadie or hardcord mountain biker, there are
+                  tons of joy waiting ahead.
+                </p>
+              </Jumbotron>
 
-          <form encType="multipart/form-data" method="post" className="new-route"
-                onSubmit={this.handleSubmit.bind(this)} >
-            <input
-              type="file"
-              ref="fileInput"
-              placeholder="Add GPX file"
-            />
-            <textarea
-              ref="textInput"
-              rows="4"
-              cols="70"
-              placeholder="Add description"
-            />
-            <input type="submit" />
-          </form>
-        </header>
+              <form encType="multipart/form-data" method="post" className="new-route"
+                    onSubmit={this.handleSubmit.bind(this)} >
+                <input
+                  type="file"
+                  ref="fileInput"
+                  placeholder="Add GPX file"
+                />
+                <textarea
+                  ref="textInput"
+                  rows="4"
+                  cols="70"
+                  placeholder="Add description"
+                />
+                <input type="submit" />
+              </form>
+            </header>
 
-        <h2>Top {this.props.routesCount} Cycling Routes in Seoul</h2>
-        <ul className="routes">
-          {this.renderRoutes()}
-        </ul>
-      </div>
+            <h2>Top {this.props.routesCount} Cycling Routes in Seoul</h2>
+
+            <ListGroup className="routes">
+              {this.renderRoutes()}
+            </ListGroup>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }

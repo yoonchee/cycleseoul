@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Grid, Row, Col, ListGroupItem } from 'react-bootstrap';
 
 import { Routes } from '../api/routes.js';
 
@@ -16,25 +17,34 @@ export default class Route extends Component {
 
   render() {
     return (
-      <li className='route'>
-        <h3>{this.props.route.name}</h3>
+      <ListGroupItem className='route'>
+        <Row>
+          <Col md={7}>
+            <h3>{this.props.route.name}</h3>
 
-        <dl className='stats'>
-          <dt className='length'>Length</dt>
-          <dd>{this.props.route.length}km</dd>
-          <dt className='elevation'>Elevation</dt>
-          <dd>{this.props.route.elevation}m</dd>
-        </dl>
+            <dl className='stats'>
+              <dt className='length'>Length</dt>
+              <dd>{this.props.route.length}km</dd>
+              <dt className='elevation'>Elevation</dt>
+              <dd>{this.props.route.elevation}m</dd>
+            </dl>
 
-        <input
-          type="checkbox"
-          readOnly
-          onClick={this.toggleChecked.bind(this)}
-        />
+            <div className='description'>{this.props.route.description}</div>
+          </Col>
 
-        <div className='description'>{this.props.route.description}</div>
-        <div id={this.props.route._id} className='map'></div>
-      </li>
+          <Col md={1}>
+            <input
+              type="checkbox"
+              readOnly
+              onClick={this.toggleChecked.bind(this)}
+            />
+          </Col>
+
+          <Col md={4}>
+            <div id={this.props.route._id} className='map'></div>
+          </Col>
+        </Row>
+      </ListGroupItem>
     );
   }
 
