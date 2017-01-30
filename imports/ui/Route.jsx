@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { Grid, Row, Col, ListGroupItem } from 'react-bootstrap';
+import { ButtonGroup, Button, Glyphicon} from 'react-bootstrap';
 
 import { Routes } from '../api/routes.js';
 
 // Task component - represents a single todo item
 export default class Route extends Component {
-  toggleChecked() {
-    console.log('checkbox clicked for route ' + this.state.name);
+  toggleStarred() {
+    console.log('Star clicked for route ' + this.props.route.name);
     /*
     const likers = Routes.find(this.props.route._id).likers;
     Routes.update(this.props.route._id, {
@@ -19,7 +20,7 @@ export default class Route extends Component {
     return (
       <ListGroupItem className='route'>
         <Row>
-          <Col md={7}>
+          <Col md={6}>
             <h3>{this.props.route.name}</h3>
 
             <dl className='stats'>
@@ -32,12 +33,11 @@ export default class Route extends Component {
             <div className='description'>{this.props.route.description}</div>
           </Col>
 
-          <Col md={1}>
-            <input
-              type="checkbox"
-              readOnly
-              onClick={this.toggleChecked.bind(this)}
-            />
+          <Col md={2}>
+            <ButtonGroup>
+              <Button onClick={this.toggleStarred.bind(this)}><Glyphicon glyph='star' /></Button>
+              <Button>Export GPX</Button>
+            </ButtonGroup>
           </Col>
 
           <Col md={4}>
@@ -51,7 +51,7 @@ export default class Route extends Component {
   componentDidMount() {
     const access_token = 'pk.eyJ1IjoieW9vbmNoZWUiLCJhIjoiY2l0MmdzZGd1MHNwaTJ1cXA1Z3k3M3JxeSJ9.Rwk0oJ53OFJlzO7iF_r7Mg';
     const map = L.map(this.props.route._id, {
-      doubleClickZoom: false
+      doubleClickZoom: false,
     });
 
     L.tileLayer(
