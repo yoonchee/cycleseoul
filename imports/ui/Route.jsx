@@ -17,27 +17,37 @@ export default class Route extends Component {
   }
 
   render() {
+    const routeStyle = {
+      padding: '30px',
+      marginBottom: '20px',
+    };
+
     return (
-      <ListGroupItem className='route'>
+      <ListGroupItem className='route' style={routeStyle}>
         <Row>
-          <Col md={6}>
-            <h3>{this.props.route.name}</h3>
+          <Col md={8}>
+            <Row>
+              <Col md={8}>
+                <h3>{this.props.route.name}</h3>
+              </Col>
 
-            <dl className='stats'>
-              <dt className='length'>Length</dt>
-              <dd>{this.props.route.length}km</dd>
-              <dt className='elevation'>Elevation</dt>
-              <dd>{this.props.route.elevation}m</dd>
-            </dl>
+              <Col md={4}>
+                <ButtonGroup>
+                  <Button onClick={this.toggleStarred.bind(this)}><Glyphicon glyph='star' /></Button>
+                  <Button>Export GPX</Button>
+                </ButtonGroup>
+              </Col>
 
-            <div className='description'>{this.props.route.description}</div>
-          </Col>
-
-          <Col md={2}>
-            <ButtonGroup>
-              <Button onClick={this.toggleStarred.bind(this)}><Glyphicon glyph='star' /></Button>
-              <Button>Export GPX</Button>
-            </ButtonGroup>
+              <Col md={12}>
+                <dl className='stats dl-horizontal'>
+                  <dt className='length'>Length</dt>
+                  <dd>{this.props.route.length}km</dd>
+                  <dt className='elevation'>Elevation</dt>
+                  <dd>{this.props.route.elevation}m</dd>
+                </dl>
+                <div className='description'>{this.props.route.description}</div>
+              </Col>
+            </Row>
           </Col>
 
           <Col md={4}>
