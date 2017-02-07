@@ -19,19 +19,19 @@ class Route extends Component {
     }
     if (!this.props.route.likers || this.props.route.likers.indexOf(user._id) === -1) {
       Routes.update(this.props.route._id, {
-        $push: {
-          likers: user._id
-        }
+        $push: { likers: user._id }
       });
       console.log('User ' + user._id + ' liked route ' + this.props.route._id);
     } else {
       Routes.update(this.props.route._id, {
-        $pull: {
-          likers: user._id
-        }
+        $pull: { likers: user._id }
       });
       console.log('User ' + user._id + ' unliked route ' + this.props.route._id);
     }
+  }
+
+  exportGpx() {
+
   }
 
   handleSubmit(event) {
@@ -43,6 +43,7 @@ class Route extends Component {
         photo_urls: url,
       }
     });
+    ReactDOM.findDOMNode(this.refs.urlInput).value = '';
     console.log('Photo was inserted successfully.');
   }
 
@@ -84,7 +85,7 @@ class Route extends Component {
                   <Button onClick={this.toggleStarred.bind(this)}>
                     <Glyphicon glyph='star' className={this.isStarred()} />
                   </Button>
-                  <Button>Export GPX</Button>
+                  <Button onClick={this.exportGpx.bind(this)}>Export GPX</Button>
                 </ButtonGroup>
               </Col>
 
