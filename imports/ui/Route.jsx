@@ -1,11 +1,15 @@
+import { Meteor } from 'meteor/meteor'
+import { createContainer } from 'meteor/react-meteor-data';
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import { Grid, Row, Col, ListGroupItem } from 'react-bootstrap';
-import { ButtonGroup, Button, Glyphicon} from 'react-bootstrap';
+import { ButtonGroup, Button, Glyphicon } from 'react-bootstrap';
+import { ControlLabel, FormControl, Image } from 'react-bootstrap';
 
 import { Routes } from '../api/routes.js';
 
-// Task component - represents a single todo item
-export default class Route extends Component {
+// Route component - represents a route
+class Route extends Component {
   toggleStarred() {
     console.log('Star clicked for route ' + this.props.route.name);
     /*
@@ -14,6 +18,26 @@ export default class Route extends Component {
       $set: { liked: !this.props.route.liked },
     });
     */
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    const url = ReactDOM.findDOMNode(this.refs.urlInput).value.trim();
+    Routes.update({ _id: this.props.route._id }, {
+      $push: {
+        photo_urls: url,
+      }
+    });
+    console.log('Photo was inserted successfully.');
+  }
+
+  renderPhotos() {
+    if (!this.props.route.photo_urls) return;
+
+    return this.props.route.photo_urls.map((url) => (
+      <Image key={url} src={url} className='route-photo' />
+    ));
   }
 
   render() {
@@ -46,6 +70,22 @@ export default class Route extends Component {
                   <dd>{this.props.route.elevation}m</dd>
                 </dl>
                 <div className='description'>{this.props.route.description}</div>
+                <ul className='route-photos'>
+                  {this.renderPhotos()}
+                </ul>
+                { this.props.currentUser ?
+                  <form method='post' className='new-photo'
+                        onSubmit={this.handleSubmit.bind(this)}>
+                    <ControlLabel>Add photos by URL</ControlLabel>
+                    <FormControl
+                      ref='urlInput'
+                      type='url'
+                    />
+                    <Button type='submit'>
+                      Submit
+                    </Button>
+                  </form> : ''
+                }
               </Col>
             </Row>
           </Col>
@@ -80,3 +120,9 @@ Route.propTypes = {
   // We can use propTypes to indiciate it is required
   route: PropTypes.object.isRequired,
 };
+
+export default createContainer(() => {
+  return {
+    currentUser: Meteor.user(),
+  };
+}, Route);

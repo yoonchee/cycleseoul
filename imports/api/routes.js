@@ -1,4 +1,8 @@
+import { Meteor } from 'meteor/meteor'
 import { Mongo } from 'meteor/mongo';
+import { check } from 'meteor/check';
+
+import fs from 'fs';
 
 class RoutesCollection extends Mongo.Collection {
   insert(route, callback) {
@@ -11,3 +15,18 @@ class RoutesCollection extends Mongo.Collection {
 }
 
 export const Routes = new RoutesCollection('routes');
+
+Meteor.methods({
+  saveImage: function (blob, route, name) {
+    check(name, String);
+    const path = 'public/' + name;
+
+    fs.writeFileSync(name, blob, 'binary', (error) => {
+      if (error) {
+        throw (new Meteor.Error(500, 'Failed to save image file.', error));
+      } else {
+        console.log('The file ' + name + ' was saved to ' + path);
+      }
+    });
+  }
+});

@@ -60,7 +60,7 @@ class App extends Component {
 
               { this.props.currentUser ?
                 <form encType="multipart/form-data" method="post" className="new-route"
-                      onSubmit={this.handleSubmit.bind(this)} >
+                      onSubmit={this.handleSubmit.bind(this)}>
                   <input
                     type="file"
                     ref="fileInput"
@@ -97,8 +97,8 @@ App.propTypes = {
 
 export default createContainer(() => {
   return {
-    routes: Routes.find().fetch(),
-    routesCount: Routes.find().count(),
+    routes: Routes.find({}).fetch(),
+    routesCount: Routes.find({}).count(),
     currentUser: Meteor.user(),
   };
 }, App);
