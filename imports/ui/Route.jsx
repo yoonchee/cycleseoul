@@ -11,25 +11,49 @@ import { Routes } from '../api/routes.js';
 // Route component - represents a route
 class Route extends Component {
   toggleStarred() {
-    console.log('Star clicked for route ' + this.props.route.name);
-    /*
-    const likers = Routes.find(this.props.route._id).likers;
-    Routes.update(this.props.route._id, {
-      $set: { liked: !this.props.route.liked },
-    });
-    */
+    const user = this.props.currentUser;
+
+    if (!user) {
+      console.log('You need to login first to star a route.');
+      return;
+    }
+    if (!this.props.route.likers || this.props.route.likers.indexOf(user._id) === -1) {
+      Routes.update(this.props.route._id, {
+        $push: {
+          likers: user._id
+        }
+      });
+      console.log('User ' + user._id + ' liked route ' + this.props.route._id);
+    } else {
+      Routes.update(this.props.route._id, {
+        $pull: {
+          likers: user._id
+        }
+      });
+      console.log('User ' + user._id + ' unliked route ' + this.props.route._id);
+    }
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
     const url = ReactDOM.findDOMNode(this.refs.urlInput).value.trim();
-    Routes.update({ _id: this.props.route._id }, {
+    Routes.update(this.props.route._id, {
       $push: {
         photo_urls: url,
       }
     });
     console.log('Photo was inserted successfully.');
+  }
+
+  isStarred() {
+    const likers = this.props.route.likers;
+
+    if (!likers || likers.indexOf(this.props.currentUser._id) === -1) {
+      return '';
+    } else {
+      return 'starred';
+    }
   }
 
   renderPhotos() {
@@ -57,7 +81,9 @@ class Route extends Component {
 
               <Col md={4}>
                 <ButtonGroup>
-                  <Button onClick={this.toggleStarred.bind(this)}><Glyphicon glyph='star' /></Button>
+                  <Button onClick={this.toggleStarred.bind(this)}>
+                    <Glyphicon glyph='star' className={this.isStarred()} />
+                  </Button>
                   <Button>Export GPX</Button>
                 </ButtonGroup>
               </Col>
