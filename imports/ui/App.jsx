@@ -21,14 +21,11 @@ class App extends Component {
     const reader = new FileReader();
 
     reader.onload = function(event) {
-      Routes.insert({
-        gpx: reader.result,
-        description: description,
-        createdAt: new Date(),            // current time
-        owner: Meteor.userId(),           // _id of logged in user
-        username: Meteor.user().username, // username of logged in user
+      const gpx = new L.GPX(reader.result, {async: true}).on('loaded', function(event) {
+        Meteor.call('routes.insert', reader.result, gpx.get_name(),
+          (gpx.get_distance() / 1000).toFixed(0),
+          gpx.get_elevation_gain().toFixed(0), description);
       });
-      console.log("Succesfully inserted a route.");
     }
     reader.readAsText(file);
   }

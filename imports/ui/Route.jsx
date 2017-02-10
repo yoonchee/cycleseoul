@@ -17,22 +17,10 @@ class Route extends Component {
       console.log('You need to login first to star a route.');
       return;
     }
-    if (!this.props.route.likers || this.props.route.likers.indexOf(user._id) === -1) {
-      Routes.update(this.props.route._id, {
-        $push: { likers: user._id }
-      });
-      console.log('User ' + user._id + ' liked route ' + this.props.route._id);
-    } else {
-      Routes.update(this.props.route._id, {
-        $pull: { likers: user._id }
-      });
-      console.log('User ' + user._id + ' unliked route ' + this.props.route._id);
-    }
+    Meteor.call('routes.toggleLiked', this.props.route._id, user._id);
   }
 
   handleClick(event) {
-    event.preventDefault();
-
     Meteor.call('exportGpx', this.props.route, function (error, result) {
       if (error) {
         console.error(error);
@@ -53,9 +41,7 @@ class Route extends Component {
     event.preventDefault();
 
     const url = ReactDOM.findDOMNode(this.refs.urlInput).value.trim();
-    Routes.update(this.props.route._id, {
-      $push: { photo_urls: url }
-    });
+    Meteor.call('routes.update', this.props.route._id, url);
     ReactDOM.findDOMNode(this.refs.urlInput).value = '';
     console.log('Photo was inserted successfully.');
   }
@@ -152,7 +138,9 @@ class Route extends Component {
       {detectRetina: true}
     ).addTo(map);
 
-    new L.GPX(this.props.route.gpx, {async: true}).on('loaded', function(e) {
+    new L.GPX(this.props.route.gpx, {
+      async: true,
+    }).on('loaded', function(e) {
       map.fitBounds(e.target.getBounds());
     }).addTo(map);
   }
