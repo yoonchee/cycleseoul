@@ -30,8 +30,23 @@ class Route extends Component {
     }
   }
 
-  exportGpx() {
+  handleClick(event) {
+    event.preventDefault();
 
+    Meteor.call('exportGpx', this.props.route, function (error, result) {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      if (result) {
+        let a = document.createElement('a');
+        document.body.appendChild(a);
+        a.href = result;
+        a.download = result.split('/').pop();
+        a.click();
+        document.body.removeChild(a);
+      }
+    });
   }
 
   handleSubmit(event) {
@@ -39,9 +54,7 @@ class Route extends Component {
 
     const url = ReactDOM.findDOMNode(this.refs.urlInput).value.trim();
     Routes.update(this.props.route._id, {
-      $push: {
-        photo_urls: url,
-      }
+      $push: { photo_urls: url }
     });
     ReactDOM.findDOMNode(this.refs.urlInput).value = '';
     console.log('Photo was inserted successfully.');
@@ -83,9 +96,12 @@ class Route extends Component {
               <Col md={4}>
                 <ButtonGroup>
                   <Button onClick={this.toggleStarred.bind(this)}>
-                    <Glyphicon glyph='star' className={this.isStarred()} />
+                    <Glyphicon glyph='star' className={this.isStarred()} />&nbsp;
+                    <span className='likes-count'>
+                      {this.props.route.likers ? this.props.route.likers.length : 0}
+                    </span>
                   </Button>
-                  <Button onClick={this.exportGpx.bind(this)}>Export GPX</Button>
+                  <Button onClick={this.handleClick.bind(this)}>Export GPX</Button>
                 </ButtonGroup>
               </Col>
 
