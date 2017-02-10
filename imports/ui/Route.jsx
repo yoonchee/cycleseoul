@@ -48,8 +48,9 @@ class Route extends Component {
 
   isStarred() {
     const likers = this.props.route.likers;
+    const user = this.props.currentUser;
 
-    if (!likers || likers.indexOf(this.props.currentUser._id) === -1) {
+    if (!likers || !user || likers.indexOf(user._id) === -1) {
       return '';
     } else {
       return 'starred';
