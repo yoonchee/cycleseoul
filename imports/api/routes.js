@@ -4,6 +4,12 @@ import { check } from 'meteor/check';
 
 export const Routes = new Mongo.Collection('routes');
 
+if (Meteor.isServer) {
+  Meteor.publish('routes', function routesPublication() {
+    return Routes.find();
+  });
+}
+
 Meteor.methods({
   'routes.insert'(gpx, name, length, elevation, description) {
     check(gpx, String);

@@ -93,6 +93,8 @@ App.propTypes = {
 };
 
 export default createContainer(() => {
+  Meteor.subscribe('routes');
+
   return {
     routes: Routes.find({}, { sort: { likers: -1 } }).fetch(),
     routesCount: Routes.find({}).count(),
