@@ -44,8 +44,10 @@ class App extends Component {
             <header>
               <AccountsUIWrapper />
 
+              <section className="hero-image"></section>
+
               <Jumbotron>
-                <h1>Cycling in Seoul</h1>
+                <h1>Seoul Cycling Guide</h1>
                 <p>
                   Cycle along the beautiful Han River on paved bicycle roads.
                   Or venture out to the outskirts of the Seoul for mountains,

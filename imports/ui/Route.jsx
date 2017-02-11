@@ -37,6 +37,10 @@ class Route extends Component {
     });
   }
 
+  showPhoto(event) {
+    console.log(event.target);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
 
@@ -61,7 +65,7 @@ class Route extends Component {
     if (!this.props.route.photo_urls) return;
 
     return this.props.route.photo_urls.map((url) => (
-      <Image key={url} src={url} className='route-photo' />
+      <Image key={url} src={url} className='route-photo' onClick={this.showPhoto.bind(this)} />
     ));
   }
 
@@ -103,6 +107,7 @@ class Route extends Component {
                 <ul className='route-photos'>
                   {this.renderPhotos()}
                 </ul>
+
                 { this.props.currentUser ?
                   <form method='post' className='new-photo'
                         onSubmit={this.handleSubmit.bind(this)}>
