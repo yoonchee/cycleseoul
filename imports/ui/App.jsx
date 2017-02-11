@@ -81,6 +81,11 @@ class App extends Component {
             <ListGroup className="routes">
               {this.renderRoutes()}
             </ListGroup>
+
+            <footer>
+              Built with the love of cycling and traveling by&nbsp;
+              <a href="https://www.instagram.com/yoonchee/" target="_blank">yoonchee</a>.
+            </footer>
           </Col>
         </Row>
       </Grid>
