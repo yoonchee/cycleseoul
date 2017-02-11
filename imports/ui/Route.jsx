@@ -5,11 +5,21 @@ import ReactDOM from 'react-dom';
 import { Grid, Row, Col, ListGroupItem } from 'react-bootstrap';
 import { ButtonGroup, Button, Glyphicon } from 'react-bootstrap';
 import { ControlLabel, FormControl, Image } from 'react-bootstrap';
+import Lightbox from 'react-images';
 
 import { Routes } from '../api/routes.js';
 
 // Route component - represents a route
 class Route extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      lightboxIsOpen: false,
+      currentImageIndex: 0,
+    };
+  }
+
   toggleStarred() {
     const user = this.props.currentUser;
 
@@ -37,8 +47,23 @@ class Route extends Component {
     });
   }
 
+  closeLightbox() {
+    this.setState({ lightboxIsOpen: false });
+  }
+
+  gotoPrevious() {
+    this.setState({ currentImageIndex: this.state.currentImageIndex - 1 });
+  }
+
+  gotoNext() {
+    this.setState({ currentImageIndex: this.state.currentImageIndex + 1 });
+  }
+
   showPhoto(event) {
-    console.log(event.target);
+    this.setState({
+      lightboxIsOpen: true,
+      currentImageIndex: parseInt(event.target.dataset.index),
+    });
   }
 
   handleSubmit(event) {
@@ -64,8 +89,8 @@ class Route extends Component {
   renderPhotos() {
     if (!this.props.route.photo_urls) return;
 
-    return this.props.route.photo_urls.map((url) => (
-      <Image key={url} src={url} className='route-photo' onClick={this.showPhoto.bind(this)} />
+    return this.props.route.photo_urls.map((url, index) => (
+      <Image key={url} src={url} data-index={index} className='route-photo' onClick={this.showPhoto.bind(this)} />
     ));
   }
 
@@ -104,9 +129,21 @@ class Route extends Component {
                   <dd>{this.props.route.elevation}m</dd>
                 </dl>
                 <div className='description'>{this.props.route.description}</div>
-                <ul className='route-photos'>
+                <div className='route-photos'>
                   {this.renderPhotos()}
-                </ul>
+                </div>
+
+                {this.props.route.photo_urls ?
+                  <Lightbox
+                    currentImage={this.state.currentImageIndex}
+                    images={this.props.route.photo_urls.map((url) => ({src: url}))}
+                    backdropClosesModal={true}
+                    isOpen={this.state.lightboxIsOpen}
+                    onClickPrev={this.gotoPrevious.bind(this)}
+                    onClickNext={this.gotoNext.bind(this)}
+                    onClose={this.closeLightbox.bind(this)}
+                  /> : ''
+                }
 
                 { this.props.currentUser ?
                   <form method='post' className='new-photo'
