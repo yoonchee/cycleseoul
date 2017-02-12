@@ -90,7 +90,12 @@ class Route extends Component {
     if (!this.props.route.photo_urls) return;
 
     return this.props.route.photo_urls.map((url, index) => (
-      <Image key={url} src={url} data-index={index} className='route-photo' onClick={this.showPhoto.bind(this)} />
+      <a key={index} role='button'>
+        <Image
+          src={url} data-index={index} className='route-photo'
+          onClick={this.showPhoto.bind(this)}
+        />
+      </a>
     ));
   }
 
