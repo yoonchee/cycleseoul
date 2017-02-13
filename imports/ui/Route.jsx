@@ -176,13 +176,14 @@ class Route extends Component {
   }
 
   componentDidMount() {
-    const access_token = 'pk.eyJ1IjoieW9vbmNoZWUiLCJhIjoiY2l0MmdzZGd1MHNwaTJ1cXA1Z3k3M3JxeSJ9.Rwk0oJ53OFJlzO7iF_r7Mg';
+    const mapboxAccessToken = 'pk.eyJ1IjoieW9vbmNoZWUiLCJhIjoiY2l0MmdzZGd1MHNwaTJ1cXA1Z3k3M3JxeSJ9.Rwk0oJ53OFJlzO7iF_r7Mg';
     const map = L.map(this.props.route._id, {
       doubleClickZoom: false,
     });
 
     L.tileLayer(
-      'https://api.mapbox.com/styles/v1/yoonchee/cit2o0eol000r2yqrylidl1ty/tiles/256/{z}/{x}/{y}?access_token=' + access_token,
+      'https://api.mapbox.com/styles/v1/yoonchee/ciz3qy1y2002w2rnrytzvlnlh/tiles/256/{z}/{x}/{y}?access_token=' +
+      mapboxAccessToken,
       {detectRetina: true}
     ).addTo(map);
 
