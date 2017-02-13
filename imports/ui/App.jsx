@@ -52,8 +52,8 @@ class App extends Component {
                   Cycle along the beautiful Han River on paved bicycle roads.
                   Or venture out to the outskirts of the Seoul for mountains,
                   streams, and endless bike paths. Whether you're a Strava
-                  PR-setting roadie or hardcord mountain biker, there are
-                  tons of joy waiting ahead.
+                  PR-setting roadie or hardcore mountain biker, there are
+                  tons of pedaling-joy waiting ahead.
                 </p>
               </Jumbotron>
 
