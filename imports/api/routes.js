@@ -36,6 +36,9 @@ Meteor.methods({
   'routes.update'(routeId, url) {
     check(routeId, String);
 
+    if (!this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
     Routes.update(routeId, { $push: { photo_urls: url } });
   },
 
@@ -43,6 +46,9 @@ Meteor.methods({
     check(routeId, String);
     const route = Routes.findOne(routeId);
 
+    if (!this.userId || userId != this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
     if (!route.likers || route.likers.indexOf(userId) === -1) {
       Routes.update(routeId, { $push: { likers: userId } });
       console.log('User ' + userId + ' liked route ' + route.name);
